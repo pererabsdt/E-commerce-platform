@@ -9,7 +9,7 @@
 - If they select registered user and provide the required details, some required fields for checkout will get automatically filled.
 - A guest user will have to enter the required details to confirm the order.
 
-# How products and variants are handled??
+## How products and variants are handled??
 - prodcut table
       - Contains different products(ex:- iphone X, JBL speaker). Relate with category table
 - categories
@@ -21,4 +21,9 @@
       - contains the different options under the variations(ex:- color -> red, blue, etc...)
 - variant
       - contains the atomic prodcut item details (ex:- iphone 16 blue, 256GB ROM, 32GB RAM)
+
+  ## Temporary Cart
+  - Temporary cart is created when a user(guest or registered but not logged in) on the site adds an item to the cart.
+  - When the user logs in, the product items in the temporary cart are added to his already pre-existing cart.
+  - Every registered user has a cart but guests or not logged on users would have a temporary cart only when they 'add item to cart'
   
