@@ -8,6 +8,7 @@
 - The user will be asked whether they are registered or guest customer user during the checkout.
 - If they select registered user and provide the required details, some required fields for checkout will get automatically filled.
 - A guest user will have to enter the required details to confirm the order.
+- The guest table contains a customer_id attribute which has a default value(ex:- 000000000) if they are unregistered, but if they are registered, it will contain their customer id. 
 
 ## How products and variants are handled??
 - prodcut table
@@ -22,8 +23,8 @@
 - variant
       - contains the atomic prodcut item details (ex:- iphone 16 blue, 256GB ROM, 32GB RAM)
 
-  ## Temporary Cart
-  - Temporary cart is created when a user(guest or registered but not logged in) on the site adds an item to the cart.
-  - When the user logs in, the product items in the temporary cart are added to his already pre-existing cart.
-  - Every registered user has a cart but guests or not logged on users would have a temporary cart only when they 'add item to cart'
+## Temporary Cart
+- Temporary cart is created when a user(guest or registered but not logged in) on the site adds an item to the cart.
+- When the user logs in, the product items in the temporary cart are added to his already pre-existing cart.
+- Every registered user has a cart but guests or not logged on users would have a temporary cart only when they 'add item to cart'
   
