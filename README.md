@@ -1,7 +1,13 @@
 # E-commerce-platform
 
--
+## How user logins and guest users are handled?
+- The user can choose to log in or continue as guest during a session.
+- Every user will get a unique guest id when they access the site.
+- The user can add/remove item to the temporary cart with this guest id.
+  
 - The user will be asked whether they are registered or guest customer user during the checkout.
+- If they select registered user and provide the required details, some required fields for checkout will get automatically filled.
+- A guest user will have to enter the required details to confirm the order.
 
 # How products and variants are handled??
 - prodcut table
