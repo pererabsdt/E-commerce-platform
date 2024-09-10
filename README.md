@@ -7,7 +7,7 @@
 - prodcut table
       - Contains different products(ex:- iphone X, JBL speaker). Relate with category table
 - categories
-      - sub categories could be handled by either self joins or a new sub_category_table. Need to choose the best option!!
+      - Contain product categories(and sub-categories). For example: Electronics -> Phone, Laptop Toys-> Beyblade, Barbie doll. [sub categories could be handled by either self joins or a new sub_category_table]
 - variations
       - contains the different variations of different categories of products
           (ex:- Phones - color, storage capacity)
