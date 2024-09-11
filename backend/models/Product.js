@@ -10,8 +10,6 @@ class Product {
     const [rows] = await db.query('SELECT * FROM products WHERE id = ?', [id]);
     return rows[0];
   }
-
-  // Add more methods as needed
 }
 
 module.exports = Product;
