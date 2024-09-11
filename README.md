@@ -45,8 +45,7 @@
       
 =======
 ## Temporary Cart
-- Temporary cart is created when a user(guest or registered but not logged in) on the site adds an item to the cart.
-- When the user logs in, the product items in the temporary cart are added to his already pre-existing cart.
-- Every registered user has a cart but guests or not logged on users would have a temporary cart only when they 'add item to cart'
+- Temporary cart is handled by locally storing(maybe using a view at the front end) the products either the unsigned registered user or a guest user might add.
+- If the unsigned in registered user logs in, the product details would be transferred to the cart table in the database. This would be handled by the back end.
   
 
