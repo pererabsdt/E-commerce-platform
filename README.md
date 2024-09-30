@@ -49,4 +49,8 @@
 - If the unsigned in registered user logs in, the product details would be transferred to the cart table in the database. This would be handled by the back end.
 - For guest users, at checkout the products in the temporary cart would be transferred to order items and shop order tables.
   
-
+### Delivery module
+- In stock and in main city - 5 days
+- In stock and not in main city - 7days
+- Out of stock and in main city - 8 days
+- Out of stock and not in main city - 10 days
