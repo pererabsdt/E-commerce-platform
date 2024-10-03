@@ -29,7 +29,8 @@ const CardGrid = (props) => {
               <div className="card-body">
                 <h5 className="card-title">{card.title}</h5>
                 <p className="card-text">{card.content}</p>
-                <a href="#" className="btn btn-primary">
+                {/* Placeholder for future link */}
+                <a href="/e" className="btn btn-primary">
                   Go somewhere
                 </a>
                 <Counter />

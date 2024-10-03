@@ -1,230 +1,296 @@
--- 1. Create category table (self-referencing)
+-- Drop and delete existing database and tables
+DROP DATABASE IF EXISTS SingleVendorECommerce;
+
+-- Create the database
+CREATE DATABASE SingleVendorECommerce;
+
+-- Use the new database
+USE SingleVendorECommerce;
+
+-- Drop existing tables if they exist
+DROP TABLE IF EXISTS `shopping_cart_item`;
+DROP TABLE IF EXISTS `order_item`;
+DROP TABLE IF EXISTS `customer_address`;
+DROP TABLE IF EXISTS `product_specification`;
+DROP TABLE IF EXISTS `customer_phone_number`;
+DROP TABLE IF EXISTS `payment_method`;
+DROP TABLE IF EXISTS `shop_order`;
+DROP TABLE IF EXISTS `address`;
+DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `variation_option`;
+DROP TABLE IF EXISTS `variation`;
+DROP TABLE IF EXISTS `customer_payment_method`;
+DROP TABLE IF EXISTS `delivery_module`;
+DROP TABLE IF EXISTS `variant`;
+DROP TABLE IF EXISTS `product`;
+DROP TABLE IF EXISTS `category`;
+DROP TABLE IF EXISTS `shopping_cart`;
+DROP TABLE IF EXISTS `customer`;
+
+-- Re-create all the tables with indexes
+CREATE TABLE `customer` (
+  `customer_id` int auto_increment,
+  `first_name` varchar(255),
+  `last_name` varchar(255),
+  `email_address` varchar(255),
+  `username` varchar(50),
+  `password` varchar(255),
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `last_login` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`customer_id`),
+  
+  -- Indexes
+  INDEX idx_email (email_address),
+  INDEX idx_username (username),
+  INDEX idx_last_login (last_login)
+);
+
+CREATE TABLE `shopping_cart` (
+  `shopping_cart_id` int auto_increment,
+  `customer_id` int,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`shopping_cart_id`),
+  FOREIGN KEY (`customer_id`) REFERENCES `customer`(`customer_id`)
+);
+
 CREATE TABLE `category` (
-  `category_id` INT AUTO_INCREMENT,
-  `category_name` VARCHAR(100) NOT NULL,
-  `parent_category_id` INT DEFAULT NULL,
-  `category_image` VARCHAR(255) DEFAULT NULL,
+  `category_id` int,
+  `category_name` varchar(100),
+  `parent_category_id` int,
+  `category_image` varchar(255),
   PRIMARY KEY (`category_id`),
   FOREIGN KEY (`parent_category_id`) REFERENCES `category`(`category_id`)
-) ENGINE=InnoDB;
+);
 
--- 2. Create customer table
-CREATE TABLE `customer` (
-  `customer_id` INT AUTO_INCREMENT,
-  `first_name` VARCHAR(255) NOT NULL,
-  `last_name` VARCHAR(255) NOT NULL,
-  `email_address` VARCHAR(255) UNIQUE NOT NULL,
-  `username` VARCHAR(50) UNIQUE NOT NULL,
-  `password` VARCHAR(255) NOT NULL,
-  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `last_login` TIMESTAMP NULL,
-  PRIMARY KEY (`customer_id`)
-) ENGINE=InnoDB;
+CREATE TABLE `product` (
+  `product_id` int,
+  `category_id` int,
+  `product_name` varchar(255),
+  `description` text(65535),
+  `product_image` varchar(255),
+  `weight` decimal(5,1),
+  PRIMARY KEY (`product_id`),
+  FOREIGN KEY (`category_id`) REFERENCES `category`(`category_id`),
+  
+  -- Indexes
+  INDEX idx_category_id (`category_id`)
+);
 
--- 3. Create payment_method table
-CREATE TABLE `payment_method` (
-  `payment_method_id` INT AUTO_INCREMENT,
-  `name` VARCHAR(200) NOT NULL,
-  PRIMARY KEY (`payment_method_id`)
-) ENGINE=InnoDB;
+CREATE TABLE `variant` (
+  `variant_id` int,
+  `product_id` int,
+  `inventory_stock` int,
+  `total_price` decimal(7,2),
+  `variant_image` varchar(255),
+  `SKU` varchar(50),
+  PRIMARY KEY (`variant_id`),
+  FOREIGN KEY (`product_id`) REFERENCES `product`(`product_id`),
+  
+  -- Indexes
+  INDEX idx_product_id (`product_id`)
+);
 
--- 4. Create variation table
+CREATE TABLE `delivery_module` (
+  `delivery_module_id` int,
+  `estimated_arrival_date` date,
+  PRIMARY KEY (`delivery_module_id`)
+);
+
+CREATE TABLE `customer_payment_method` (
+  `cpm_id` int,
+  `customer_id` int,
+  `card_number` varchar(20),
+  `expiry_date` date,
+  PRIMARY KEY (`cpm_id`),
+  FOREIGN KEY (`customer_id`) REFERENCES `customer`(`customer_id`)
+);
+
 CREATE TABLE `variation` (
-  `variation_id` INT AUTO_INCREMENT,
-  `category_id` INT,
-  `name` VARCHAR(100) NOT NULL,
+  `variation_id` int,
+  `category_id` int,
+  `name` varchar(100),
   PRIMARY KEY (`variation_id`),
   FOREIGN KEY (`category_id`) REFERENCES `category`(`category_id`)
-) ENGINE=InnoDB;
+);
 
--- 5. Create variation_option table
 CREATE TABLE `variation_option` (
-  `variation_option_id` INT AUTO_INCREMENT,
-  `variation_id` INT,
-  `value` VARCHAR(100) NOT NULL,
+  `variation_option_id` int,
+  `variation_id` int,
+  `value` varchar(100),
   PRIMARY KEY (`variation_option_id`),
   FOREIGN KEY (`variation_id`) REFERENCES `variation`(`variation_id`)
-) ENGINE=InnoDB;
+);
 
--- 6. Create address table
-CREATE TABLE `address` (
-  `address_id` INT AUTO_INCREMENT,
-  `address_line1` VARCHAR(255) NOT NULL,
-  `address_line2` VARCHAR(255) DEFAULT NULL,
-  `address_line3` VARCHAR(255) DEFAULT NULL,
-  `city` VARCHAR(100) NOT NULL,
-  `region` VARCHAR(100) DEFAULT NULL,
-  `postal_code` VARCHAR(20) DEFAULT NULL,
-  `is_main_city` TINYINT(1) DEFAULT 0,
-  PRIMARY KEY (`address_id`)
-) ENGINE=InnoDB;
-
--- 7. Create user table
 CREATE TABLE `user` (
-  `user_id` INT AUTO_INCREMENT,
-  `customer_id` INT,
-  `login_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `user_id` int,
+  `custemer_id` int,
+  `login_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`user_id`),
-  FOREIGN KEY (`customer_id`) REFERENCES `customer`(`customer_id`)
-) ENGINE=InnoDB;
+  FOREIGN KEY (`custemer_id`) REFERENCES `customer`(`customer_id`)
+);
 
--- 8. Create delivery_module table
-CREATE TABLE `delivery_module` (
-  `delivery_module_id` INT AUTO_INCREMENT,
-  `estimated_arrival_date` DATE,
-  PRIMARY KEY (`delivery_module_id`)
-) ENGINE=InnoDB;
+CREATE TABLE `address` (
+  `address_id` int,
+  `address_line1` varchar(255),
+  `address_line2` varchar(255),
+  `address_line3` varchar(255),
+  `city` varchar(100),
+  `region` varchar(100),
+  `postal_code` varchar(20),
+  `is_main_city` tinyint,
+  PRIMARY KEY (`address_id`)
+);
 
--- 9. Create product table
-CREATE TABLE `product` (
-  `product_id` INT AUTO_INCREMENT,
-  `category_id` INT,
-  `product_name` VARCHAR(255) NOT NULL,
-  `description` TEXT,
-  `product_image` VARCHAR(255) DEFAULT NULL,
-  `weight` DECIMAL(10,2),
-  PRIMARY KEY (`product_id`),
-  FOREIGN KEY (`category_id`) REFERENCES `category`(`category_id`)
-) ENGINE=InnoDB;
+CREATE TABLE `payment_method` (
+  `payment_method_id` int,
+  `name` varchar(200),
+  PRIMARY KEY (`payment_method_id`)
+);
 
--- 10. Create variant table
-CREATE TABLE `variant` (
-  `variant_id` INT AUTO_INCREMENT,
-  `product_id` INT,
-  `inventory_stock` INT DEFAULT 0,
-  `total_price` DECIMAL(10,2) NOT NULL,
-  `variant_image` VARCHAR(255) DEFAULT NULL,
-  `SKU` VARCHAR(50) NOT NULL,
-  PRIMARY KEY (`variant_id`),
-  FOREIGN KEY (`product_id`) REFERENCES `product`(`product_id`)
-) ENGINE=InnoDB;
-
--- 11. Create shop_order table
 CREATE TABLE `shop_order` (
-  `order_id` INT AUTO_INCREMENT,
-  `user_id` INT,
-  `delivery_module_id` INT,
-  `order_date` DATETIME DEFAULT CURRENT_TIMESTAMP,
-  `payment_method_id` INT,
-  `delivery_method` ENUM('store pickup', 'delivery') NOT NULL,
-  `delivery_address_id` INT,
-  `total_order_price` DECIMAL(10,2) NOT NULL,
-  `order_status` ENUM('pending', 'shipped', 'delivered', 'cancelled') DEFAULT 'pending',
-  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `order_id` int,
+  `user_id` int,
+  `delivery_module_id` int,
+  `order_date` datetime,
+  `payment_method_id` int,
+  `delivery_method` enum('standard', 'express', 'overnight'),
+  `delivery_address_id` int,
+  `total_order_price` decimal(10, 2),
+  `order_status` enum('pending', 'shipped', 'delivered', 'canceled'),
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`order_id`),
   FOREIGN KEY (`user_id`) REFERENCES `user`(`user_id`),
   FOREIGN KEY (`delivery_module_id`) REFERENCES `delivery_module`(`delivery_module_id`),
-  FOREIGN KEY (`payment_method_id`) REFERENCES `payment_method`(`payment_method_id`),
-  FOREIGN KEY (`delivery_address_id`) REFERENCES `address`(`address_id`)
-) ENGINE=InnoDB;
+  FOREIGN KEY (`delivery_address_id`) REFERENCES `address`(`address_id`),
+  FOREIGN KEY (`payment_method_id`) REFERENCES `payment_method`(`payment_method_id`)
+);
 
--- 12. Create shopping_cart table
-CREATE TABLE `shopping_cart` (
-  `shopping_cart_id` INT AUTO_INCREMENT,
-  `customer_id` INT,
-  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`shopping_cart_id`),
+
+CREATE TABLE `customer_phone_number` (
+  `phone_number` varchar(20),
+  `customer_id` int,
+  PRIMARY KEY (`phone_number`),
   FOREIGN KEY (`customer_id`) REFERENCES `customer`(`customer_id`)
-) ENGINE=InnoDB;
+);
 
--- 13. Create shopping_cart_item table
-CREATE TABLE `shopping_cart_item` (
-  `shopping_cart_item_id` INT AUTO_INCREMENT,
-  `shopping_cart_id` INT,
-  `variant_id` INT,
-  `quantity` INT NOT NULL,
-  PRIMARY KEY (`shopping_cart_item_id`),
-  FOREIGN KEY (`shopping_cart_id`) REFERENCES `shopping_cart`(`shopping_cart_id`),
-  FOREIGN KEY (`variant_id`) REFERENCES `variant`(`variant_id`)
-) ENGINE=InnoDB;
-
--- 14. Create order_item table
-CREATE TABLE `order_item` (
-  `order_item_id` INT AUTO_INCREMENT,
-  `order_id` INT,
-  `variant_id` INT,
-  `quantity` INT NOT NULL,
-  `price` DECIMAL(10,2) NOT NULL,
-  PRIMARY KEY (`order_item_id`),
-  FOREIGN KEY (`order_id`) REFERENCES `shop_order`(`order_id`),
-  FOREIGN KEY (`variant_id`) REFERENCES `variant`(`variant_id`)
-) ENGINE=InnoDB;
-
--- 15. Create customer_payment_method table
-CREATE TABLE `customer_payment_method` (
-  `cpm_id` INT AUTO_INCREMENT,
-  `customer_id` INT,
-  `card_number` VARCHAR(20) NOT NULL,
-  `expire_date` DATE NOT NULL,
-  PRIMARY KEY (`cpm_id`),
-  FOREIGN KEY (`customer_id`) REFERENCES `customer`(`customer_id`)
-) ENGINE=InnoDB;
-
--- 16. Create product_specification table
 CREATE TABLE `product_specification` (
-  `product_specification_id` INT AUTO_INCREMENT,
-  `variant_id` INT,
-  `variation_option_id` INT,
+  `product_specification_id` int,
+  `variant_id` int,
+  `variation_option_id` int,
   PRIMARY KEY (`product_specification_id`),
   FOREIGN KEY (`variant_id`) REFERENCES `variant`(`variant_id`),
   FOREIGN KEY (`variation_option_id`) REFERENCES `variation_option`(`variation_option_id`)
-) ENGINE=InnoDB;
+);
 
--- 17. Create customer_address table
 CREATE TABLE `customer_address` (
-  `customer_id` INT,
-  `address_id` INT,
-  `is_default` TINYINT(1) DEFAULT 0,
+  `customer_id` int,
+  `address_id` int,
+  `is_default` tinyint,
   PRIMARY KEY (`customer_id`, `address_id`),
   FOREIGN KEY (`customer_id`) REFERENCES `customer`(`customer_id`),
   FOREIGN KEY (`address_id`) REFERENCES `address`(`address_id`)
-) ENGINE=InnoDB;
+);
+
+CREATE TABLE `order_item` (
+  `order_item_id` int,
+  `order_id` int,
+  `variant_id` int,
+  `quantity` int,
+  `price` decimal(7,2),
+  PRIMARY KEY (`order_item_id`),
+  FOREIGN KEY (`order_id`) REFERENCES `shop_order`(`order_id`) ON DELETE CASCADE
+);
+
+CREATE TABLE `shopping_cart_item` (
+  `shopping_cart_item_id` int,
+  `shopping_cart_id` int,
+  `variant_id` int,
+  `quantity` int,
+  `added_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`shopping_cart_item_id`),
+  FOREIGN KEY (`shopping_cart_id`) REFERENCES `shopping_cart`(`shopping_cart_id`),
+  FOREIGN KEY (`variant_id`) REFERENCES `variant`(`variant_id`)
+);
+
+DELIMITER $$
+-- Trigger to Reduce Inventory Stock when an Order is Made
+CREATE TRIGGER reduce_inventory_stock
+AFTER INSERT ON order_item
+FOR EACH ROW
+BEGIN
+  UPDATE variant
+  SET inventory_stock = inventory_stock - NEW.quantity
+  WHERE variant.variant_id = NEW.variant_id;
+END$$
+
+-- Trigger to Update updated_at Timestamp in the shop_order Table
+CREATE TRIGGER update_order_timestamp
+BEFORE UPDATE ON shop_order
+FOR EACH ROW
+BEGIN
+  SET NEW.updated_at = CURRENT_TIMESTAMP;
+END$$
+
+-- Trigger to Automatically Create a Shopping Cart when a Customer Registers
+CREATE TRIGGER create_shopping_cart
+AFTER INSERT ON customer
+FOR EACH ROW
+BEGIN
+  INSERT INTO shopping_cart (customer_id, created_at, updated_at)
+  VALUES (NEW.customer_id, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+END$$
+
+-- Trigger to remove items that are going to be checked out from the cart
+CREATE TRIGGER remove_cart_item
+AFTER INSERT ON order_item
+FOR EACH ROW
+BEGIN
+  DELETE FROM shopping_cart_item
+  WHERE shopping_cart_id = (SELECT shopping_cart_id FROM shopping_cart WHERE customer_id = (SELECT customer_id FROM user WHERE user_id = (SELECT user_id FROM shop_order WHERE order_id = NEW.order_id)))
+    AND variant_id = NEW.variant_id;
+END$$
+
+-- Trigger to update the total_order_price when items are added to checkout
+CREATE TRIGGER update_total_order_price
+AFTER INSERT ON order_item
+FOR EACH ROW
+BEGIN
+  -- Calculate the new total order price by summing up the prices of all items in the order
+  UPDATE shop_order
+  SET total_order_price = (
+    SELECT SUM(price * quantity) 
+    FROM order_item 
+    WHERE order_id = NEW.order_id
+  )
+  WHERE order_id = NEW.order_id;
+END$$
 
 
+-- Trigger to Ensure Inventory Stock Does Not Fall Below Zero
+CREATE TRIGGER check_inventory_stock
+BEFORE INSERT ON order_item
+FOR EACH ROW
+BEGIN
+  IF (SELECT inventory_stock FROM variant WHERE variant_id = NEW.variant_id) < NEW.quantity THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Not enough inventory for the requested product.';
+  END IF;
+END$$
 
 
--- Insert categories
-INSERT INTO `category` (`category_name`, `parent_category_id`, `category_image`) VALUES
-('Electronics', NULL, 'electronics.jpg'),
-('Toys', NULL, 'toys.jpg'),
-('Mobile', 1, 'mobile.jpg'),
-('Speakers', 1, 'speakers.jpg'),
-('Action Figures', 2, 'action_figures.jpg'),
-('Board Games', 2, 'board_games.jpg'),
-('Laptops', 1, 'laptops.jpg'),
-('Drones', 1, 'drones.jpg'),
-('Stuffed Toys', 2, 'stuffed_toys.jpg'),
-('RC Cars', 2, 'rc_cars.jpg');
+DELIMITER ;
 
--- Insert payment methods
-INSERT INTO `payment_method` (`name`) VALUES
-('Cash on Delivery'),
-('Credit Card'),
-('Debit Card'),
-('PayPal');
-
--- Insert products
-INSERT INTO `product` (`category_id`, `product_name`, `description`, `product_image`, `weight`) VALUES
-(3, 'iPhone X', 'Latest Apple smartphone', 'iphone_x.jpg', 0.5),
-(3, 'Samsung Galaxy S21', 'Latest Samsung smartphone', 'galaxy_s21.jpg', 0.45),
-(7, 'MacBook Pro', 'Apple laptop', 'macbook_pro.jpg', 1.4),
-(7, 'Dell XPS 13', 'Dell laptop', 'dell_xps_13.jpg', 1.2),
-(4, 'Bose Speaker', 'High-quality speaker', 'bose_speaker.jpg', 2.0),
-(4, 'JBL Speaker', 'Portable speaker', 'jbl_speaker.jpg', 1.5),
-(8, 'DJI Drone', 'Camera drone', 'dji_drone.jpg', 1.8),
-(8, 'Parrot Drone', 'Mini drone', 'parrot_drone.jpg', 0.6),
-(5, 'Superman Action Figure', 'Detailed action figure', 'superman_figure.jpg', 0.3),
-(5, 'Batman Action Figure', 'Detailed action figure', 'batman_figure.jpg', 0.35),
--- Add more products up to 40
-;
-
--- Insert variants for products (example for iPhone X)
-INSERT INTO `variant` (`product_id`, `inventory_stock`, `total_price`, `variant_image`, `SKU`) VALUES
-(1, 50, 999.99, 'iphone_x_16gb.jpg', 'IPX-16-BLK'),
-(1, 30, 1099.99, 'iphone_x_32gb.jpg', 'IPX-32-BLK'),
-(1, 20, 999.99, 'iphone_x_16gb_red.jpg', 'IPX-16-RD'),
-(1, 10, 1099.99, 'iphone_x_32gb_red.jpg', 'IPX-32-RD'),
--- Add variants for other products
-;
+CREATE OR REPLACE VIEW customer_order_report AS
+SELECT 
+    c.customer_id,
+    CONCAT(c.first_name, ' ', c.last_name) AS customer_name,
+    COUNT(so.order_id) AS total_orders,
+    SUM(so.total_order_price) AS total_spent
+FROM 
+    customer c
+JOIN 
+    shop_order so ON c.customer_id = so.user_id
+GROUP BY 
+    c.customer_id, customer_name;

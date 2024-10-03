@@ -2,11 +2,13 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "../../components/header";
 import AllCategory from "../../components/allCatagery"; // Corrected import
+import ProductList from "./ProductList";
 
 const HomePage = () => {
   return (
     <>
       <Header />
+
       <div className="container-fluid">
         <div className="row">
           {/* Sidebar */}
@@ -79,6 +81,9 @@ const HomePage = () => {
             {/* Our Products */}
             <section className="products-section mb-4">
               <AllCategory /> {/* Corrected component name */}
+              <AllCategory />
+              <AllCategory />
+              <AllCategory />
             </section>
 
             {/* New Arrivals */}
@@ -129,6 +134,11 @@ const HomePage = () => {
           </main>
         </div>
       </div>
+      <ProductList />
+      <ProductList />
+      <ProductList />
+      <ProductList />
+      <ProductList />
     </>
   );
 };

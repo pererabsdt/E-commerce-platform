@@ -16,9 +16,7 @@ function Header() {
     const fetchResults = async () => {
       if (query.length > 0) {
         try {
-          const response = await fetch(
-            `http://localhost:5000/api/search?q=${query}`
-          );
+          const response = await fetch(`api/search?q=${query}`);
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
@@ -69,30 +67,18 @@ function Header() {
           {error && <div className="error">{error}</div>}
 
           <button className="search-icon-button">
-            <img
-              src={search}
-              alt="Search Icon"
-              className="search-icon"
-            />
+            <img src={search} alt="Search Icon" className="search-icon" />
           </button>
         </div>
         <div className="header-right">
           <span>Delivery Within 10 Days For All Items</span>
           <div className="cart-user">
             <a href="/cart">
-              <img
-                src={cart}
-                alt="Cart Icon"
-                className="cart-icon"
-              />
+              <img src={cart} alt="Cart Icon" className="cart-icon" />
             </a>
-            <a href="#">{CardsCount()}</a>
-            <a href="#">
-              <img
-                src={user}
-                alt="User Icon"
-                className="user-icon"
-              />
+            <a href="/e">{CardsCount()}</a>
+            <a href="/e">
+              <img src={user} alt="User Icon" className="user-icon" />
             </a>
           </div>
         </div>

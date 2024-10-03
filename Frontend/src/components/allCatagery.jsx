@@ -3,14 +3,14 @@ import "../assets/styles/allcategory.css";
 
 const AllCategory = () => {
   const [products, setProducts] = useState([]);
-  const [cartProductId, setCartProductId] = useState(null); // State for the cart product ID
-  const [cartProducts, setCartProducts] = useState(); // State for cart products
+  // const [cartProductId, setCartProductId] = useState(null); // State for the cart product ID
+  // const [cartProducts, setCartProducts] = useState(); // State for cart products
   const [error, setError] = useState("");
 
   const onAddToCart = async (productId) => {
     try {
       // Send the product ID to the backend
-      const response = await fetch("http://localhost:5000/api/cart", {
+      const response = await fetch("/api/cart", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,7 +34,7 @@ const AllCategory = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/products");
+        const response = await fetch("/api/products");
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
