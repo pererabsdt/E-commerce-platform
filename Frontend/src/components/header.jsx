@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { CardsCount } from "../pages/cards";
+import cart from "../assets/images/cart.png";
+import logo from "../assets/images/logo.png";
+import search from "../assets/images/search.png";
+import user from "../assets/images/user.png";
+
+
 function Header() {
   const [query, setQuery] = useState(""); // Search query state
   const [results, setResults] = useState([]); // Search results state
@@ -34,7 +40,7 @@ function Header() {
   return (
     <header>
       <div className="header-container">
-        <img src="./pictures/logo.png" alt="Logo" className="logo" />
+        <img src={logo} alt="Logo" className="logo" />
         <div className="search-wrapper">
           <input
             type="text"
@@ -64,7 +70,7 @@ function Header() {
 
           <button className="search-icon-button">
             <img
-              src="./pictures/search.png"
+              src={search}
               alt="Search Icon"
               className="search-icon"
             />
@@ -75,7 +81,7 @@ function Header() {
           <div className="cart-user">
             <a href="/cart">
               <img
-                src="./pictures/cart.png"
+                src={cart}
                 alt="Cart Icon"
                 className="cart-icon"
               />
@@ -83,7 +89,7 @@ function Header() {
             <a href="#">{CardsCount()}</a>
             <a href="#">
               <img
-                src="./pictures/user.png"
+                src={user}
                 alt="User Icon"
                 className="user-icon"
               />
