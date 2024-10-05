@@ -2,7 +2,7 @@ import "./assets/styles/App.css";
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Card from "./pages/cards.jsx";
-import CheckoutPage from "./pages/checkout.jsx";
+import CheckoutPage from "./pages/checkout/Checkout.js";
 import HomePage from "./pages/Dashboard/home.jsx";
 import SignIn from "./pages/sign/sign-in/SignIn.jsx";
 import SignUp from "./pages/sign/sign-up/signup.jsx";
