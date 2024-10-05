@@ -142,13 +142,9 @@ const Header = () => {
   ]);
 
   // State for Login Dialog
-  const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
 
   // Handle Login Dialog
-  const handleOpenLoginDialog = () => setIsLoginDialogOpen(true);
-  const handleCloseLoginDialog = () => setIsLoginDialogOpen(false);
-  const handleLoginSuccess = () => setIsLoggedIn(true); // Update login state on successful login
-
+  
   const handleLogout = () => {
     setIsLoggedIn(false);
     setIsProfileMenuOpen(false);
@@ -659,7 +655,7 @@ const Header = () => {
               </>
             ) : (
               <>
-                <ListItem button onClick={handleOpenLoginDialog}>
+                <ListItem button>
                   <ListItemIcon>
                     <PersonIcon />
                   </ListItemIcon>
