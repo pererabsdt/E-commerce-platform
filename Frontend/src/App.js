@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Card from "./pages/cards.jsx";
 import CheckoutPage from "./pages/checkout.jsx";
 import HomePage from "./pages/Dashboard/home.jsx";
-import Guest from "./pages/loginpage/guest.jsx";
+import SignIn from "./pages/sign-in/SignIn.js";
 
 function App() {
   return (
@@ -13,7 +13,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="api/cart" element={<Card />} />
         <Route path="/checkout" element={<CheckoutPage />} />
-        <Route path="/guest" element={<Guest />} />
+        <Route path="/signin" element={<SignIn />} />
       </Routes>
     </Router>
   );
