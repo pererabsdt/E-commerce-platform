@@ -9,6 +9,8 @@ import SignUp from "./pages/sign/sign-up/signup.jsx";
 import Cart from "./pages/cart/cart.jsx";
 import About from "./pages/about/about.jsx"
 import Contact from "./pages/contact/contact.jsx";
+import Notification from "./pages/notifications/notification.js";
+import Help from "./pages/help/help.js";
 
 function App() {
   return (
@@ -22,7 +24,8 @@ function App() {
         <Route path="/carts" element={<Cart />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        
+        <Route path="/notifications" element={<Notification />} />
+        <Route path="/help" element={<Help />} />
       </Routes>
     </Router>
   );
