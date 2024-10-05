@@ -14,7 +14,7 @@ import Stack from "@mui/material/Stack";
 import MuiCard from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
 import { GoogleIcon, FacebookIcon, LogoIcon } from "../CustomIcons";
-import ForgotPassword from "../ForgotPassword";
+
 import AppTheme from "../../../theme/AppTheme";
 import ColorModeSelect from "../../../theme/ColorModeSelect";
 
@@ -64,14 +64,11 @@ export default function SignUp(props) {
   const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
-  const [open, setOpen] = React.useState(false);
+ 
   const [nameError, setNameError] = React.useState(false); // or true/initial value
   const [nameErrorMessage, setNameErrorMessage] = React.useState("");
 
 
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const handleSubmit = (event) => {
     if (emailError || passwordError) {
@@ -206,21 +203,18 @@ export default function SignUp(props) {
               />
             </FormControl>
             <FormControl>
-              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <FormLabel htmlFor="password">Password</FormLabel>
-              </Box>
+              <FormLabel htmlFor="password">Password</FormLabel>
               <TextField
-                error={passwordError}
-                helperText={passwordErrorMessage}
+                required
+                fullWidth
                 name="password"
                 placeholder="••••••"
                 type="password"
                 id="password"
-                autoComplete="current-password"
-                autoFocus
-                required
-                fullWidth
+                autoComplete="new-password"
                 variant="outlined"
+                error={passwordError}
+                helperText={passwordErrorMessage}
                 color={passwordError ? "error" : "primary"}
               />
             </FormControl>
@@ -228,7 +222,7 @@ export default function SignUp(props) {
               control={<Checkbox value="remember" color="primary" />}
               label=" I want to receive updates via email."
             />
-            <ForgotPassword open={open} handleClose={handleClose} />
+
             <Button
               type="submit"
               fullWidth
