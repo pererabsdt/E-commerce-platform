@@ -1,29 +1,24 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "../../components/header";
-import AllCategory from "../../components/allCatagery"; // Corrected import
+import AllCategory from "../../components/allCatagery";
 import ProductList from "./ProductList";
+import FilterSidebar from "./FilterSidebar";
 
 const HomePage = () => {
   return (
     <>
       <Header />
 
-      <div className="container-fluid">
+      <div
+        className="container-fluid"
+        style={{ maxWidth: "1550px", margin: "0 auto" }}
+      >
         <div className="row">
           {/* Sidebar */}
-          <aside className="col-md-3 bg-light pt-4">
-            <h4>All Categories</h4>
-            <ul className="list-group">
-              <li className="list-group-item">Headphones</li>
-              <li className="list-group-item">Digital Cameras</li>
-              <li className="list-group-item">Mobile Phones & Tablets</li>
-              <li className="list-group-item">Computers & Laptops</li>
-              <li className="list-group-item">TVs</li>
-              <li className="list-group-item">Toys</li>
-              <li className="list-group-item">More Categories</li>
-            </ul>
-          </aside>
+          <div className="col-md-3">
+            <FilterSidebar />
+          </div>
 
           {/* Main Content */}
           <main className="col-md-9">
@@ -80,17 +75,17 @@ const HomePage = () => {
 
             {/* Our Products */}
             <section className="products-section mb-4">
-              <AllCategory /> {/* Corrected component name */}
+              <AllCategory />
               <AllCategory />
               <AllCategory />
               <AllCategory />
             </section>
 
             {/* New Arrivals */}
-            <section className="new-arrivals-section">
+            <section className="new-arrivals-section mb-4">
               <h4>New Arrivals</h4>
               <div className="row">
-                <div className="col-md-3">
+                <div className="col-md-4">
                   <div className="card">
                     <img
                       src="https://via.placeholder.com/150"
@@ -103,7 +98,7 @@ const HomePage = () => {
                     </div>
                   </div>
                 </div>
-                <div className="col-md-3">
+                <div className="col-md-4">
                   <div className="card">
                     <img
                       src="https://via.placeholder.com/150"
@@ -116,7 +111,7 @@ const HomePage = () => {
                     </div>
                   </div>
                 </div>
-                <div className="col-md-3">
+                <div className="col-md-4">
                   <div className="card">
                     <img
                       src="https://via.placeholder.com/150"
@@ -134,11 +129,17 @@ const HomePage = () => {
           </main>
         </div>
       </div>
-      <ProductList />
-      <ProductList />
-      <ProductList />
-      <ProductList />
-      <ProductList />
+
+      <div
+        className="container-fluid"
+        style={{ maxWidth: "1400px", margin: "0 auto" }}
+      >
+        <ProductList />
+        <ProductList />
+        <ProductList />
+        <ProductList />
+        <ProductList />
+      </div>
     </>
   );
 };
