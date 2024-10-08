@@ -4,9 +4,10 @@ import Header from "../../components/header";
 import AllCategory from "../../components/allCatagery";
 import ProductList from "./ProductList";
 import FilterSidebar from "./FilterSidebar";
-import Banner from "./Banner";
+import Banner from "./banner";
 import Newarrival from "./Newarrival";
 import Footer from "../../components/footer"; // Update if necessary
+
 
 const HomePage = () => {
   return (
@@ -31,11 +32,11 @@ const HomePage = () => {
             {/* Our Products */}
             <section className="products-section mb-4">
               <AllCategory />
-              
             </section>
 
             {/* New Arrivals */}
             <Newarrival />
+
           </main>
         </div>
       </div>
@@ -45,6 +46,7 @@ const HomePage = () => {
         style={{ maxWidth: "1400px", margin: "0 auto" }}
       >
         <ProductList />
+        
       </div>
       <Footer />
     </>
