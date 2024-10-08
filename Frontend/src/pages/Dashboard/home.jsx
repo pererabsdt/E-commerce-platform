@@ -5,6 +5,7 @@ import AllCategory from "../../components/allCatagery";
 import ProductList from "./ProductList";
 import FilterSidebar from "./FilterSidebar";
 import Banner from "./Banner";
+import Footer from "../../components/footer"; // Update if necessary
 
 const HomePage = () => {
   return (
@@ -86,11 +87,9 @@ const HomePage = () => {
         style={{ maxWidth: "1400px", margin: "0 auto" }}
       >
         <ProductList />
-        <ProductList />
-        <ProductList />
-        <ProductList />
-        <ProductList />
+        
       </div>
+      <Footer />
     </>
   );
 };
