@@ -23,26 +23,32 @@ const Card = styled(MuiCard)(({ theme }) => ({
   flexDirection: "column",
   alignSelf: "center",
   width: "100%",
-  padding: theme.spacing(4),
-  gap: theme.spacing(2),
+  padding: theme.spacing(6),
+  gap: theme.spacing(3),
   margin: "auto",
+  borderRadius: theme.spacing(2),
+  backgroundColor: theme.palette.background.paper,
+  boxShadow:
+    "0 4px 20px rgba(0, 0, 0, 0.1)",
   [theme.breakpoints.up("sm")]: {
     maxWidth: "450px",
   },
-  boxShadow:
-    "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px",
   ...theme.applyStyles("dark", {
+    backgroundColor: theme.palette.background.default,
     boxShadow:
-      "hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px",
+      "0 4px 20px rgba(0, 0, 0, 0.5)",
   }),
 }));
 
 const SignInContainer = styled(Stack)(({ theme }) => ({
-  minHeight: "100%",
+  minHeight: "100vh",
   padding: theme.spacing(2),
   [theme.breakpoints.up("sm")]: {
     padding: theme.spacing(4),
   },
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
   "&::before": {
     content: '""',
     display: "block",
@@ -116,7 +122,7 @@ export default function SignIn(props) {
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
-      <SignInContainer direction="column" justifyContent="space-between">
+      <SignInContainer direction="column" justifyContent="center">
         <ColorModeSelect
           sx={{ position: "fixed", top: "1rem", right: "1rem" }}
         />
@@ -125,7 +131,13 @@ export default function SignIn(props) {
           <Typography
             component="h1"
             variant="h4"
-            sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
+            sx={{ 
+              width: "100%", 
+              fontSize: "clamp(1.75rem, 5vw, 2.25rem)", 
+              fontWeight: 600,
+              textAlign: "center",
+              marginBottom: (theme) => theme.spacing(2)
+            }}
           >
             Sign in
           </Typography>
@@ -180,7 +192,6 @@ export default function SignIn(props) {
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                autoFocus
                 required
                 fullWidth
                 variant="outlined"

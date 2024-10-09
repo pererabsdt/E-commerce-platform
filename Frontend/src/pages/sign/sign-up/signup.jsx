@@ -38,11 +38,14 @@ const Card = styled(MuiCard)(({ theme }) => ({
 }));
 
 const SignUpContainer = styled(Stack)(({ theme }) => ({
-  minHeight: "100%",
+  minHeight: "100vh", // Ensure it takes full viewport height
   padding: theme.spacing(2),
   [theme.breakpoints.up("sm")]: {
     padding: theme.spacing(4),
   },
+  display: "flex", // Enable Flexbox
+  alignItems: "center", // Center horizontally
+  justifyContent: "center", // Center vertically
   "&::before": {
     content: '""',
     display: "block",

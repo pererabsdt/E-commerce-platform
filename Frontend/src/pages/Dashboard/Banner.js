@@ -40,8 +40,8 @@ const BannerContainer = styled(Box)(({ theme }) => ({
   alignItems: "center",
   boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
   [theme.breakpoints.down("sm")]: {
-    height: "300px",
-    padding: theme.spacing(2),
+    height: "450px",
+    padding: theme.spacing(4),
   },
 }));
 
@@ -67,6 +67,7 @@ const ContentWrapper = styled(Box)(({ theme }) => ({
   position: "relative",
   zIndex: 1,
   width: "100%",
+  transition: "transform 0.5s ease-in-out",
   [theme.breakpoints.down("sm")]: {
     textAlign: "center",
   },
@@ -114,6 +115,19 @@ const Dot = styled(Box)(({ theme, active }) => ({
     : alpha(theme.palette.common.white, 0.5),
   cursor: "pointer",
   transition: "background-color 0.3s ease-in-out",
+}));
+
+// CategoryIcon styled component
+const CategoryIcon = styled(Box)(({ theme }) => ({
+  position: "absolute",
+  top: 10,
+  right: 10,
+  backgroundColor: alpha(theme.palette.primary.main, 0.8),
+  borderRadius: "50%",
+  padding: theme.spacing(1),
+  transition: "transform 0.3s ease, opacity 0.3s ease",
+  opacity: 0,
+  transform: "scale(1)",
 }));
 
 // Banner Component
@@ -191,17 +205,33 @@ const Banner = () => {
     setIsPlaying((prev) => !prev);
   };
 
+  // Pause on hover handlers
+  const handleMouseEnter = () => {
+    setIsPlaying(false);
+  };
+
+  const handleMouseLeave = () => {
+    setIsPlaying(true);
+  };
+
   return (
-    <BannerContainer {...handlers}>
+    <BannerContainer {...handlers} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       {slides.map((slide, index) => (
         <BackgroundImage
           key={index}
           image={slide.image}
           className={currentSlide === index ? "active" : ""}
+          role="img"
+          aria-label={`Slide ${index + 1}`}
+          loading="lazy"
         />
       ))}
       <Container maxWidth="lg">
-        <ContentWrapper>
+        <ContentWrapper
+          sx={{
+            transform: isPlaying ? "translateY(0)" : "translateY(-10px)",
+          }}
+        >
           <Typography
             variant={isSmallScreen ? "h4" : "h2"}
             component="h1"
@@ -248,6 +278,9 @@ const Banner = () => {
                       },
                     }}
                   />
+                  <CategoryIcon className="CategoryIcon">
+                    <ArrowForwardIcon fontSize="small" />
+                  </CategoryIcon>
                   <Link href="#" color="inherit" underline="hover">
                     <Typography variant="subtitle1" color="text.primary">
                       {category.name}{" "}
@@ -271,6 +304,14 @@ const Banner = () => {
             key={index}
             active={index === currentSlide}
             onClick={() => setCurrentSlide(index)}
+            aria-label={`Go to slide ${index + 1}`}
+            role="button"
+            tabIndex={0}
+            onKeyPress={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                setCurrentSlide(index);
+              }
+            }}
           />
         ))}
       </PaginationDots>
