@@ -84,6 +84,8 @@ export default function SignIn(props) {
       email: data.get("email"),
       password: data.get("password"),
     });
+    
+    
   };
 
   const validateInputs = () => {
