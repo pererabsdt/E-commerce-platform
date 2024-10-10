@@ -10,7 +10,7 @@ const AllCategory = () => {
   const onAddToCart = async (productId) => {
     try {
       // Send the product ID to the backend
-      const response = await fetch("http:/localhost:5000/api/cart", {
+      const response = await fetch("http:/localhost:5001/api/cart", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

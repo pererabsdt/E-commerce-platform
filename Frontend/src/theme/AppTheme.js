@@ -20,7 +20,10 @@ function AppTheme({ children, disableCustomTheme, themeComponents }) {
             cssVarPrefix: 'template',
           },
           colorSchemes, // Recently added in v6 for building light & dark mode app, see https://mui.com/material-ui/customization/palette/#color-schemes
-          typography,
+          typography: {
+            ...typography,
+            fontFamily: '"Poppins", sans-serif', // Set "Poppins" as the default font
+          },
           shadows,
           shape,
           components: {
