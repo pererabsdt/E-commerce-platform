@@ -114,7 +114,7 @@ export default function SignUp(props) {
       };
     
       try {
-        const response = await fetch('http://localhost:5001/api/customers/register', {
+        const response = await fetch('api/customers/register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

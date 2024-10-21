@@ -1,12 +1,16 @@
-const express = require('express');
+const express = require("express");
+const customerController = require("../controllers/customerController.js");
+
 const router = express.Router();
-const customerController = require('../controllers/customerController');
 
 // POST /api/customers/register
-router.post('/register', customerController.registerCustomer);
+router.post("/register", customerController.registerCustomer);
 
 // GET /api/customers/:id
-router.get('/:id', customerController.getCustomerById);
+router.get("/:id", customerController.getCustomerById);
+
+// POST /api/customers/login
+router.post("/login", customerController.loginCustomer);
 
 // Add more routes as needed (update, delete, etc.)
 
