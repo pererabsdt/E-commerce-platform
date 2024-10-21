@@ -24,7 +24,7 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/delivery', deliveryRoutes);
 
-const PORT = 5000;
+const PORT = 5001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

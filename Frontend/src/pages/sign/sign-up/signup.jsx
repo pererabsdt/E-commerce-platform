@@ -114,7 +114,7 @@ export default function SignUp(props) {
       };
     
       try {
-        const response = await fetch('http://localhost:5000/api/customers/register', {
+        const response = await fetch('http://localhost:5001/api/customers/register', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -135,6 +135,7 @@ export default function SignUp(props) {
           // Set error message if username is duplicated
           setUserNameError(true);
           setUserNameErrorMessage('Username already exists. Please choose another username.');
+          setSuccessMessage('');
         } else {
           throw new Error(`Error: ${response.status}`);
         }
