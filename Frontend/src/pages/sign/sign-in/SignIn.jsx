@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
@@ -28,15 +29,13 @@ const Card = styled(MuiCard)(({ theme }) => ({
   margin: "auto",
   borderRadius: theme.spacing(2),
   backgroundColor: theme.palette.background.paper,
-  boxShadow:
-    "0 4px 20px rgba(0, 0, 0, 0.1)",
+  boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
   [theme.breakpoints.up("sm")]: {
     maxWidth: "450px",
   },
   ...theme.applyStyles("dark", {
     backgroundColor: theme.palette.background.default,
-    boxShadow:
-      "0 4px 20px rgba(0, 0, 0, 0.5)",
+    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
   }),
 }));
 
@@ -71,6 +70,8 @@ export default function SignIn(props) {
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
+  const [loginError, setLoginError] = React.useState(""); // State to handle login errors
+  const navigate = useNavigate(); // Initialize useNavigate for redirection
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -80,18 +81,42 @@ export default function SignIn(props) {
     setOpen(false);
   };
 
-  const handleSubmit = (event) => {
-    if (emailError || passwordError) {
-      event.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault(); // Prevent default form submission
+    if (!validateInputs()) {
       return;
     }
+
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-    
-    
+    const email = data.get("email");
+    const password = data.get("password");
+
+    try {
+      const response = await fetch('/api/customers/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const responseData = await response.json();
+
+      // Store the JWT token in local storage
+      localStorage.setItem('token', responseData.token);
+
+      // Redirect to the homepage or a protected route
+      navigate('/'); // Change '/home' to your desired route
+
+      console.log('Login successful:', responseData);
+    } catch (error) {
+      console.error('Error logging in customer:', error);
+      setLoginError('Invalid email or password'); // Set login error message
+    }
   };
 
   const validateInputs = () => {
@@ -154,7 +179,11 @@ export default function SignIn(props) {
               gap: 2,
             }}
           >
-            
+            {loginError && (
+              <Typography color="error" sx={{ textAlign: "center" }}>
+                {loginError}
+              </Typography>
+            )}
             <FormControl>
               <FormLabel htmlFor="email">Email</FormLabel>
               <TextField
