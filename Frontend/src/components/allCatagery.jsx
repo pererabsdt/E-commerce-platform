@@ -10,7 +10,7 @@ const AllCategory = () => {
   const onAddToCart = async (productId) => {
     try {
       // Send the product ID to the backend
-      const response = await fetch("/api/cart", {
+      const response = await fetch("http:/localhost:5001/api/cart", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,7 +34,7 @@ const AllCategory = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("/api/products");
+        const response = await fetch("http://localhost:5001/api/products");
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -72,6 +72,7 @@ const AllCategory = () => {
               src={product.image}
               alt={product.product_name}
               style={{ width: "100px", height: "100px" }}
+             
             />
             <h2>{product.product_name}</h2>
             <div style={{ marginTop: "8px", fontSize: "14px" }}>

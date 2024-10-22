@@ -1,6 +1,8 @@
 const Customer = require('../models/Customer');
 const Address = require('../models/Address');
 const ShoppingCart = require('../models/ShoppingCart');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 exports.registerCustomer = async (req, res) => {
   try {
@@ -13,6 +15,32 @@ exports.registerCustomer = async (req, res) => {
     res.status(500).json({ message: 'Error registering customer', error: error.toString() });
   }
 };
+
+exports.loginCustomer = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const customer = await Customer.getCustomerByEmail(email);
+    if (!customer) {
+      return res.status(404).json({ message: 'Customer not found' });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, customer.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid password' });
+    }
+
+    const token = jwt.sign({ customerId: customer.customer_id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.cookie('token', token, { httpOnly: true, secure: true });
+    res.status(200).json({ message: 'Login successful', customer, token });
+    console.log('Login successful');
+  } catch (error) {
+    console.error('Error in loginCustomer:', error);
+    res.status(500).json({ message: 'Error logging in customer', error: error.toString() });
+  }
+};
+
+
 
 exports.getCustomerById = async (req, res) => {
   try {

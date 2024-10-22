@@ -11,6 +11,7 @@ import About from "./pages/about/about.jsx"
 import Contact from "./pages/contact/contact.jsx";
 import Notification from "./pages/notifications/notification.js";
 import Help from "./pages/help/help.js";
+import NotFound from "./pages/notFound/NotFound.jsx";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/notifications" element={<Notification />} />
         <Route path="/help" element={<Help />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );

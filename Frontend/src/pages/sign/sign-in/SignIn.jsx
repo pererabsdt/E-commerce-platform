@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
@@ -23,26 +24,30 @@ const Card = styled(MuiCard)(({ theme }) => ({
   flexDirection: "column",
   alignSelf: "center",
   width: "100%",
-  padding: theme.spacing(4),
-  gap: theme.spacing(2),
+  padding: theme.spacing(6),
+  gap: theme.spacing(3),
   margin: "auto",
+  borderRadius: theme.spacing(2),
+  backgroundColor: theme.palette.background.paper,
+  boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
   [theme.breakpoints.up("sm")]: {
     maxWidth: "450px",
   },
-  boxShadow:
-    "hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px",
   ...theme.applyStyles("dark", {
-    boxShadow:
-      "hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px",
+    backgroundColor: theme.palette.background.default,
+    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
   }),
 }));
 
 const SignInContainer = styled(Stack)(({ theme }) => ({
-  minHeight: "100%",
+  minHeight: "100vh",
   padding: theme.spacing(2),
   [theme.breakpoints.up("sm")]: {
     padding: theme.spacing(4),
   },
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
   "&::before": {
     content: '""',
     display: "block",
@@ -65,6 +70,8 @@ export default function SignIn(props) {
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
+  const [loginError, setLoginError] = React.useState(""); // State to handle login errors
+  const navigate = useNavigate(); // Initialize useNavigate for redirection
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -74,16 +81,42 @@ export default function SignIn(props) {
     setOpen(false);
   };
 
-  const handleSubmit = (event) => {
-    if (emailError || passwordError) {
-      event.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault(); // Prevent default form submission
+    if (!validateInputs()) {
       return;
     }
+
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const email = data.get("email");
+    const password = data.get("password");
+
+    try {
+      const response = await fetch('/api/customers/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const responseData = await response.json();
+
+      // Store the JWT token in local storage
+      localStorage.setItem('token', responseData.token);
+
+      // Redirect to the homepage or a protected route
+      navigate('/'); // Change '/home' to your desired route
+
+      console.log('Login successful:', responseData);
+    } catch (error) {
+      console.error('Error logging in customer:', error);
+      setLoginError('Invalid email or password'); // Set login error message
+    }
   };
 
   const validateInputs = () => {
@@ -116,7 +149,7 @@ export default function SignIn(props) {
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
-      <SignInContainer direction="column" justifyContent="space-between">
+      <SignInContainer direction="column" justifyContent="center">
         <ColorModeSelect
           sx={{ position: "fixed", top: "1rem", right: "1rem" }}
         />
@@ -125,7 +158,13 @@ export default function SignIn(props) {
           <Typography
             component="h1"
             variant="h4"
-            sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
+            sx={{ 
+              width: "100%", 
+              fontSize: "clamp(1.75rem, 5vw, 2.25rem)", 
+              fontWeight: 600,
+              textAlign: "center",
+              marginBottom: (theme) => theme.spacing(2)
+            }}
           >
             Sign in
           </Typography>
@@ -140,7 +179,11 @@ export default function SignIn(props) {
               gap: 2,
             }}
           >
-            
+            {loginError && (
+              <Typography color="error" sx={{ textAlign: "center" }}>
+                {loginError}
+              </Typography>
+            )}
             <FormControl>
               <FormLabel htmlFor="email">Email</FormLabel>
               <TextField
@@ -180,7 +223,6 @@ export default function SignIn(props) {
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                autoFocus
                 required
                 fullWidth
                 variant="outlined"

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
@@ -38,11 +39,14 @@ const Card = styled(MuiCard)(({ theme }) => ({
 }));
 
 const SignUpContainer = styled(Stack)(({ theme }) => ({
-  minHeight: "100%",
+  minHeight: "100vh", // Ensure it takes full viewport height
   padding: theme.spacing(2),
   [theme.breakpoints.up("sm")]: {
     padding: theme.spacing(4),
   },
+  display: "flex", // Enable Flexbox
+  alignItems: "center", // Center horizontally
+  justifyContent: "center", // Center vertically
   "&::before": {
     content: '""',
     display: "block",
@@ -67,47 +71,118 @@ export default function SignUp(props) {
  
   const [nameError, setNameError] = React.useState(false); // or true/initial value
   const [nameErrorMessage, setNameErrorMessage] = React.useState("");
+  const[userNameError, setUserNameError] = React.useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [userNameErrorMessage, setUserNameErrorMessage] = useState("");
+  const [formData, setFormData] = useState({
+    first_name: '',
+    last_name: '',
+    email_address: '',
+    username: '',
+    password: '',
+  });
 
-
-
-  const handleSubmit = (event) => {
-    if (emailError || passwordError) {
-      event.preventDefault();
-      return;
-    }
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
     });
   };
 
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (validateInputs()) {
+      
+      if (emailError || passwordError) {
+     
+        return;
+      }
+      const data = new FormData(event.currentTarget);
+      console.log({
+        email: data.get("email"),
+        password: data.get("password"),
+      });
+      event.preventDefault();
+      const mappedData = {
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        email_address: formData.email_address,
+        username: formData.username,
+        password: formData.password
+      };
+    
+      try {
+        const response = await fetch('api/customers/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(mappedData),  // Send the mapped data
+        });
+    
+        const data = await response.json();
+        console.log('Registration response:', data);
+
+       
+    
+        if (!response.ok) {
+
+          
+
+        if (data.error.includes('Duplicate entry')) {
+          // Set error message if username is duplicated
+          setUserNameError(true);
+          setUserNameErrorMessage('Username already exists. Please choose another username.');
+          setSuccessMessage('');
+        } else {
+          throw new Error(`Error: ${response.status}`);
+        }
+      
+        }
+        else{
+          setSuccessMessage('Registration successful! You can now login.');
+          setErrorMessage('');
+        }
+    
+       
+      } catch (error) {
+        
+         
+          setErrorMessage('An error occurred during registration. Please try again.');
+               setSuccessMessage('');
+      }
+    }
+  
+    
+  };
+
   const validateInputs = () => {
-    const email = document.getElementById("email");
-    const password = document.getElementById("password");
-    const fname = document.getElementById("Firstname");
-    const lname = document.getElementById("Lastname");
+    
 
     let isValid = true;
 
-    if (!fname.value ||fname.value.length > 15) {
+   
+    if (!formData.first_name || formData.first_name.length > 15) {
       setNameError(true);
-      setNameErrorMessage("Name is invalid");
-      isValid = false;
-    } else {
-      setNameError(false);
-      setNameErrorMessage("");
-    }
-    if (!lname.value || lname.value.length > 15) {
-      setNameError(true);
-      setNameErrorMessage("Name is invalid");
+      setNameErrorMessage("First name is invalid");
       isValid = false;
     } else {
       setNameError(false);
       setNameErrorMessage("");
     }
 
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
+    if (!formData.last_name || formData.last_name.length > 15) {
+      setNameError(true);
+      setNameErrorMessage("Last name is invalid");
+      isValid = false;
+    } else {
+      setNameError(false);
+      setNameErrorMessage("");
+    }
+
+    if (!formData.email_address || !/\S+@\S+\.\S+/.test(formData.email_address)) {
       setEmailError(true);
       setEmailErrorMessage("Please enter a valid email address.");
       isValid = false;
@@ -116,7 +191,7 @@ export default function SignUp(props) {
       setEmailErrorMessage("");
     }
 
-    if (!password.value || password.value.length < 6) {
+    if (!formData.password || formData.password.length < 6) {
       setPasswordError(true);
       setPasswordErrorMessage("Password must be at least 6 characters long.");
       isValid = false;
@@ -124,7 +199,6 @@ export default function SignUp(props) {
       setPasswordError(false);
       setPasswordErrorMessage("");
     }
-    
 
     return isValid;
   };
@@ -145,6 +219,17 @@ export default function SignUp(props) {
           >
             Sign up
           </Typography>
+
+          {errorMessage && (
+            <Typography color="error" sx={{ mt: 2 }}>
+              {errorMessage}
+            </Typography>
+          )}
+          {successMessage && (
+            <Typography color="success" sx={{ mt: 2 }}>
+              {successMessage}
+            </Typography>
+          )}
           <Box
             component="form"
             onSubmit={handleSubmit}
@@ -160,11 +245,13 @@ export default function SignUp(props) {
               <FormLabel htmlFor="fname">First name</FormLabel>
               <TextField
                 autoComplete="fname"
-                name="fname"
+                name="first_name"
                 required
                 fullWidth
                 id="fname"
                 placeholder="Parakrama "
+                value={formData.first_name}
+                onChange={handleChange}
                 error={nameError}
                 helperText={nameErrorMessage}
                 color={nameError ? "error" : "primary"}
@@ -174,11 +261,13 @@ export default function SignUp(props) {
               <FormLabel htmlFor="lname">Last name</FormLabel>
               <TextField
                 autoComplete="lname"
-                name="lname"
+                name="last_name"
                 required
                 fullWidth
                 id="lname"
                 placeholder="Rathnayaka "
+                value={formData.last_name}
+                onChange={handleChange}
                 error={nameError}
                 helperText={nameErrorMessage}
                 color={nameError ? "error" : "primary"}
@@ -191,17 +280,36 @@ export default function SignUp(props) {
                 helperText={emailErrorMessage}
                 id="email"
                 type="email"
-                name="email"
+                name="email_address"
                 placeholder="Parakramawork@email.com"
+                value={formData.email_address}
                 autoComplete="email"
                 autoFocus
                 required
+                onChange={handleChange}
                 fullWidth
                 variant="outlined"
                 color={emailError ? "error" : "primary"}
                 sx={{ ariaLabel: "email" }}
               />
             </FormControl>
+            <FormControl>
+              <FormLabel htmlFor="username">Username</FormLabel>
+              <TextField
+                required
+                fullWidth
+                error={userNameError}
+                helperText={userNameErrorMessage}
+                name="username"
+                placeholder="Parakrama"
+                id="username"
+                value={formData.username}
+                autoComplete="username"
+                variant="outlined"
+                onChange={handleChange}
+              
+                color={nameError ? "error" : "primary"}/>
+              </FormControl>
             <FormControl>
               <FormLabel htmlFor="password">Password</FormLabel>
               <TextField
@@ -211,8 +319,10 @@ export default function SignUp(props) {
                 placeholder="••••••"
                 type="password"
                 id="password"
+                value={formData.password}
                 autoComplete="new-password"
                 variant="outlined"
+                onChange={handleChange}
                 error={passwordError}
                 helperText={passwordErrorMessage}
                 color={passwordError ? "error" : "primary"}
@@ -227,7 +337,7 @@ export default function SignUp(props) {
               type="submit"
               fullWidth
               variant="contained"
-              onClick={validateInputs}
+              
             >
               Sign in
             </Button>
