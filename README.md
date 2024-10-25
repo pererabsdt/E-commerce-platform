@@ -54,3 +54,6 @@
 - In stock and not in main city - 7days
 - Out of stock and in main city - 8 days
 - Out of stock and not in main city - 10 days
+
+
+### To do
