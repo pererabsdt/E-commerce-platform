@@ -62,3 +62,4 @@
 - Dropdown  Done
 - propfilepage under progress janodi
 - Checkout under progress Parakrama
+- Adding notification functionality when an order is placed or order_status is updated----> Under progress ----> Lakshitha ---> Done
