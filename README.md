@@ -63,3 +63,11 @@
 - propfilepage under progress janodi
 - Checkout under progress Parakrama
 - Adding notification functionality when an order is placed or order_status is updated----> Under progress ----> Lakshitha ---> Done
+- Admin related stuff -------------> Bashitha
+- Choosing variants in product page -----------> Dulitha
+- Fix homepage (banner, new arrivals, remove the 3 hardcoded products after new arrivals) -------> Dulitha
+- Fix product cards in homepage (Remove both add to cart and buy item buttons and when the product card is pressed, direct to product page) ----------> Dulitha
+- Wishlist -------> Lakshitha 
+- Rating ---------> 
+- Handle everything with guest user
+- Stored procedures!!!! 
