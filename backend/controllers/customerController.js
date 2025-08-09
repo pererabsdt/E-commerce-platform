@@ -4,7 +4,7 @@ const Address = require('../models/Address');
 const ShoppingCart = require('../models/ShoppingCart');
 const CustomerAddress = require("../models/CustomerAddress");
 const OrderItem = require("../models/OrderItem");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const Order = require("../models/Order");
 
 const jwt = require("jsonwebtoken");

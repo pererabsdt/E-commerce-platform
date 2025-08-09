@@ -1,0 +1,45 @@
+
+services:
+  database:
+    image: mysql:latest
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_DATABASE: ecommerce
+    env_file:
+      - ./database/.env
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./database/dumpfile.sql:/docker-entrypoint-initdb.d/dumpfile.sql
+
+  backend:
+    build: ./backend
+    container_name: backend-container
+    env_file:
+      - ./backend/.env
+   
+    depends_on:
+      - database
+    volumes:
+      - ./backend:/app
+
+  admin:
+    build: ./admin
+    container_name: admin-container
+    env_file:
+      - ./admin/.env
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./admin:/app
+
+  frontend:
+    build: ./Frontend
+    container_name: frontend-container
+    env_file:
+      - ./Frontend/.env
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./Frontend:/app

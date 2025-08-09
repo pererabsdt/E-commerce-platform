@@ -76,6 +76,41 @@ web_modules/
 
 # dotenv environment variable files
 .env
+.DS_Store
+
+# Build output
+build/
+dist/
+
+# Docker
+docker-compose.override.yml
+*.pid
+
+# Database
+*.sqlite
+*.db
+database/dumpfile.sql
+backend/database.sql
+
+# VS Code
+.vscode/
+
+# Frontend
+Frontend/build/
+Frontend/node_modules/
+admin/node_modules/
+admin/build/
+
+# Backend
+backend/node_modules/
+
+# Ignore test output
+backend/models/tests/
+backend/config/test/
+
+# Ignore Python cache (if any)
+__pycache__/
+*.pyc
 .env.development.local
 .env.test.local
 .env.production.local
